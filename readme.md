@@ -1,8 +1,11 @@
-# CGame
+# 1. C Game
 Repositório para um jogo simples feito em C++ para Linux & Windows.  
-
----   
-### Objetivos
+- [1. C Game](#1-c-game)
+  - [1.1. Objetivos](#11-objetivos)
+  - [1.2. Ferramentas](#12-ferramentas)
+  - [1.3. Bibliotecas](#13-bibliotecas)
+  
+## 1.1. Objetivos
 - Praticar e desenvolver habilidades em C++.
 - Desenvolver habilidades Multi-Plataforma.
 - Desenvolver habilidades de projeto de software.
@@ -16,8 +19,15 @@ Repositório para um jogo simples feito em C++ para Linux & Windows.
     - Compatibilidade com controles.
     - Portabilidade.
     - Etc.
----
-### Ferramentas
+
+## 1.2. Ferramentas
 - Quadro: [https://excalidraw.com/](https://excalidraw.com/)
 - Assets: [https://kenney.nl/assets/category:2D](https://kenney.nl/assets/category:2D)
-- Raylib: [https://www.raylib.com/](https://www.raylib.com/)
+  
+## 1.3. Bibliotecas
+| Biblioteca | Uso                  | Link                                                                                 |
+| ---------- | -------------------- | ------------------------------------------------------------------------------------ |
+| Raylib     | Graficos             | [https://www.raylib.com/](https://www.raylib.com/)                                   |
+| EnTT       | ECS                  | [https://github.com/skypjack/entt](https://github.com/skypjack/entt)                 |
+| ImGui      | Editor               | [https://github.com/ocornut/imgui](https://github.com/ocornut/imgui)                 |
+| rlImGui    | Wrapper ImGui Raylib | [https://github.com/raylib-extras/rlImGui](https://github.com/raylib-extras/rlImGui) |
