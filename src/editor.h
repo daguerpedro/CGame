@@ -1,6 +1,7 @@
 #pragma once
 
 #include "scenemanager.h"
+#include "logger.h"
 
 #ifdef DEBUG
 #include <rlImGui.h>
@@ -9,24 +10,39 @@
 
 class Editor
 {
-private:
-    SceneManager &sceneManger;
-    std::string m_selectedSceneName;
-
 public:
     Editor(SceneManager &sceneManager) : sceneManger(sceneManager) {};
 #ifdef DEBUG
     void draw()
     {
-        ImGui::Begin("Inspetor");
+        if (ImGui::Begin("Inspetor"))
+        {
+            activeScene();
+            sceneList();
+            changeScene();
+            ImGui::End();
+        }
 
+        Logger::Draw();
+    }
+
+private:
+    SceneManager &sceneManger;
+    std::string m_selectedSceneName;
+
+    void activeScene()
+    {
         if (sceneManger.hasActiveScene())
             ImGui::Text("Scene: %s", sceneManger.getActiveSceneName().c_str());
         else
             ImGui::TextColored({1, 0, 0, 1}, "No scene loaded.");
 
         ImGui::Separator();
+    };
 
+    void sceneList()
+    {
+        ImGui::Spacing();
         ImGui::SetNextItemWidth(-1);
         if (ImGui::BeginListBox("##Scene Registry"))
         {
@@ -41,9 +57,10 @@ public:
             }
             ImGui::EndListBox();
         }
+    };
 
-        ImGui::Spacing();
-        
+    void changeScene()
+    {
         ImGui::BeginDisabled(m_selectedSceneName.empty());
         if (ImGui::Button("Trocar Cena"))
         {
@@ -51,8 +68,6 @@ public:
                 sceneManger.changeScene(m_selectedSceneName);
         }
         ImGui::EndDisabled();
-
-        ImGui::End();
-    }
+    };
 #endif
 };

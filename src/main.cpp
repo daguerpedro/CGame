@@ -1,12 +1,12 @@
 #include <iostream>
 #include "app.h"
+#include "logger.h"
 
 class Test : public Scene
 {
 public:
     Test() : Scene("Test")
     {
-
     }
 
     void start() override
@@ -16,17 +16,14 @@ public:
 
     void stop() override
     {
-
     }
 
     void update(SceneManager &sm, float deltaTime) override
     {
-
     }
 
     void draw() override
     {
-
     }
 };
 
@@ -35,7 +32,6 @@ class Menu : public Scene
 public:
     Menu() : Scene("Menu")
     {
-        
     }
 
     void start() override
@@ -50,12 +46,10 @@ public:
 
     void update(SceneManager &sm, float deltaTime) override
     {
-
     }
 
     void draw() override
     {
-
     }
 };
 
@@ -63,11 +57,11 @@ int main(int, char **)
 {
     App app;
     app.init("Desenvolvimento", 800, 600);
-    
-    auto& sm = app.sceneManager;
+
+    auto &sm = app.sceneManager;
     sm.registerScene<Test>("Test");
-    sm.registerScene<Menu>("Menu");    
-    
+    sm.registerScene<Menu>("Menu");
+
     app.loop();
 
     return 0;

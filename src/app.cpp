@@ -36,17 +36,19 @@ void App::loop()
                 ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
                 ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
-                ImGui::Begin("Viewport");
-                ImGui::PopStyleVar();
-                    ImVec2 viewSize = ImGui::GetContentRegionAvail();
-                    if (viewSize.x > 0 && viewSize.y > 0 && (viewSize.x != gameViewTexture.texture.width || viewSize.y != gameViewTexture.texture.height)) 
-                    { 
-                        UnloadRenderTexture(gameViewTexture);
-                        gameViewTexture = LoadRenderTexture((int)viewSize.x, (int)viewSize.y);
-                    }
-                    rlImGuiImageRenderTexture(&gameViewTexture);
-                ImGui::End();
-
+                if(ImGui::Begin("Viewport"))
+                {
+                    ImGui::PopStyleVar();
+                        ImVec2 viewSize = ImGui::GetContentRegionAvail();
+                        if (viewSize.x > 0 && viewSize.y > 0 && (viewSize.x != gameViewTexture.texture.width || viewSize.y != gameViewTexture.texture.height)) 
+                        { 
+                            UnloadRenderTexture(gameViewTexture);
+                            gameViewTexture = LoadRenderTexture((int)viewSize.x, (int)viewSize.y);
+                        }
+                        rlImGuiImageRenderTexture(&gameViewTexture);
+                    ImGui::End();
+                }
+                
                 m_editor.draw();
 
             rlImGuiEnd();

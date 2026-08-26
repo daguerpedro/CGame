@@ -57,7 +57,8 @@ add_executable(${PROJECT_NAME} src/main.cpp
   src/scene.h
   src/scenemanager.h
   src/editor.h
-  src/app.cpp)
+  src/app.cpp
+  src/logger.h)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib rlImGui EnTT::EnTT)
 

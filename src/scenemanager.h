@@ -4,6 +4,7 @@
 #include "scene.h"
 #include <unordered_map>
 #include <functional>
+#include "logger.h"
 
 class SceneManager
 {
@@ -12,27 +13,33 @@ private:
     std::unordered_map<std::string, std::function<std::unique_ptr<Scene>()>> m_sceneRegistry;
 
 public:
-    SceneManager() { };
+    SceneManager() {};
 
-    template<typename T>
-    void registerScene(const std::string& name) {
-        m_sceneRegistry[name] = []() { 
-            return std::make_unique<T>(); 
+    template <typename T>
+    void registerScene(const std::string &name)
+    {
+        m_sceneRegistry[name] = []()
+        {
+            return std::make_unique<T>();
         };
     }
 
     void changeScene(std::unique_ptr<Scene> newScene)
     {
         if (m_activeScene)
+        {
             m_activeScene->stop();
+            Logger::Log("[INFO] Scene Manager: parado cena \"{}\"", m_activeScene->name.c_str());
+        }
 
         m_activeScene = std::move(newScene);
         m_activeScene->start();
+        Logger::Log("[INFO] Scene Manager: carregado cena \"{}\"", m_activeScene->name.c_str());
     };
 
-    void changeScene(const std::string& name) 
+    void changeScene(const std::string &name)
     {
-        if (m_sceneRegistry.find(name) != m_sceneRegistry.end()) 
+        if (m_sceneRegistry.find(name) != m_sceneRegistry.end())
             changeScene(m_sceneRegistry[name]());
         else
             printf_s("[SCENEMANAGER] Erro ao carregar cena \"%s\": cena não encontrada no registro de cenas.\n");
@@ -63,5 +70,5 @@ public:
         return m_activeScene->name;
     };
 
-    const auto& getRegisteredScenes() const { return m_sceneRegistry; }
+    const auto &getRegisteredScenes() const { return m_sceneRegistry; }
 };
