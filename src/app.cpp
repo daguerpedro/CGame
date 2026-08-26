@@ -16,18 +16,17 @@ void App::loop()
     while (WindowShouldClose() == false)
     {
         float deltaTime = GetFrameTime();
+        sceneManager.update(deltaTime);
 
 #ifndef DEBUG
         BeginDrawing();
-            ClearBackground(DARKGRAY); // TODO: CLEAR WITH SCENE BG
-            m_sceneManager.draw();
+            sceneManager.draw();
         EndDrawing();
 #endif
 
 #ifdef DEBUG
         BeginTextureMode(gameViewTexture);
-            ClearBackground(DARKGRAY); // TODO: CLEAR WITH SCENE BG
-            m_sceneManager.draw();
+            sceneManager.draw();
         EndTextureMode();
 
         BeginDrawing();
