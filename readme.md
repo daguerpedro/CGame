@@ -25,9 +25,9 @@ Repositório para um jogo simples feito em C++ para Linux & Windows.
 - Assets: [https://kenney.nl/assets/category:2D](https://kenney.nl/assets/category:2D)
   
 ## 1.3. Bibliotecas
-| Biblioteca | Uso                  | Link                                                                                 |
-| ---------- | -------------------- | ------------------------------------------------------------------------------------ |
-| Raylib     | Graficos             | [https://www.raylib.com/](https://www.raylib.com/)                                   |
-| EnTT       | ECS                  | [https://github.com/skypjack/entt](https://github.com/skypjack/entt)                 |
-| ImGui      | Editor               | [https://github.com/ocornut/imgui](https://github.com/ocornut/imgui)                 |
-| rlImGui    | Wrapper ImGui Raylib | [https://github.com/raylib-extras/rlImGui](https://github.com/raylib-extras/rlImGui) |
+| Biblioteca | Uso                     | Link                                                                                 |
+| ---------- | ----------------------- | ------------------------------------------------------------------------------------ |
+| Raylib     | Graficos                | [https://www.raylib.com/](https://www.raylib.com/)                                   |
+| EnTT       | Entity Component System | [https://github.com/skypjack/entt](https://github.com/skypjack/entt)                 |
+| ImGui      | Editor/Debugger         | [https://github.com/ocornut/imgui](https://github.com/ocornut/imgui)                 |
+| rlImGui    | Wrapper ImGui Raylib    | [https://github.com/raylib-extras/rlImGui](https://github.com/raylib-extras/rlImGui) |
