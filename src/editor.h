@@ -8,7 +8,9 @@
 #include <imgui.h>
 #endif
 
+#include <algorithm>
 #include <raylib.h>
+#include <cmath>
 
 class Editor
 {
@@ -17,7 +19,7 @@ public:
 #ifdef DEBUG
     void draw()
     {
-        sceneWindow();        
+        sceneWindow();
         statsWindow();
 
         Logger::Draw();
@@ -63,8 +65,8 @@ private:
                 if (is_selected)
                     ImGui::SetItemDefaultFocus();
             }
+            ImGui::EndListBox();
         }
-        ImGui::EndListBox();
     };
 
     void changeScene()
@@ -78,28 +80,34 @@ private:
         ImGui::EndDisabled();
     };
 
+    float values[60] = {0};
+    int values_offset = 0;
+    double refresh_time = 0.0;
+
+    float max = 0.000000f;
+
     void statsWindow()
     {
-        //Last 3 sec
-        //Code by ImGuiDemoTools :D
-        static float values[60*3] = {};
-        static int values_offset = 0;
-        static double refresh_time = 0.0;
-
-        static float min = 0.0000000f;
-        static float max = 0.0000000f;
-        
+        // Code by ImGuiDemoTools :D
         if (refresh_time == 0.0)
+        {
             refresh_time = ImGui::GetTime();
-
-        while (refresh_time < ImGui::GetTime()) 
+        }
+        
+        while (refresh_time < ImGui::GetTime())
         {
             values[values_offset] = GetFrameTime();
             values_offset = (values_offset + 1) % IM_COUNTOF(values);
             refresh_time += 1.0f / 60.0f;
+            
+            auto actualMax = (*std::max_element(values, values+values_offset));
+            if(max < actualMax)
+            {
+                max = actualMax;
+            }
         }
 
-        if(ImGui::Begin("Stats"))
+        if (ImGui::Begin("Stats"))
         {
             float average = 0.0f;
             for (int n = 0; n < IM_COUNTOF(values); n++)
@@ -107,21 +115,11 @@ private:
             average /= (float)IM_COUNTOF(values);
             char overlay[32];
 
-            ImGui::Text("FPS: %1.f", 1.0/GetFrameTime());
-            ImGui::SameLine();
-            ImGui::Text("Avg: %1.f", 1.0/average);
-            
-            ImGui::Text("Avg Frame Time: %.4f (s)", average);
-            ImGui::SameLine();
-            ImGui::Text("%.4f (ms)", average*1000);
-            
-            
-            auto ftime = GetFrameTime();
-            if(ftime < min) min = ftime;
-            if(ftime > max) max = ftime;
-            
+            ImGui::Text("FPS: %1.f (%1.f)", 1.0 / GetFrameTime(), 1.0 / average);
+            ImGui::Text("Frame Time: %.4f (ms)", average * 1000);
+
             ImGui::SetNextItemWidth(-1);
-            ImGui::PlotLines("##ftime", values, IM_COUNTOF(values), values_offset, NULL, min, max, ImVec2(0, 80.0f));
+            ImGui::PlotLines("##ftime", values, IM_COUNTOF(values), values_offset, NULL, 0, max, ImVec2(0, 80.0f));
         }
         ImGui::End();
     }
