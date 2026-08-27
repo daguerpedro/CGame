@@ -61,7 +61,7 @@ int main(int, char **)
     auto &sm = app.sceneManager;
     sm.registerScene<Test>("Test");
     sm.registerScene<Menu>("Menu");
-
+    sm.changeScene("Test");
     app.loop();
 
     return 0;

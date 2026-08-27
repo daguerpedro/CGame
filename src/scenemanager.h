@@ -30,12 +30,12 @@ public:
         if (m_activeScene)
         {
             m_activeScene->stop();
-            Logger::Log("[INFO] Scene Manager: parado cena \"{}\"", m_activeScene->name.c_str());
+            Logger::Info("[SCENE MANAGER] Parado cena \"{}\"", m_activeScene->name.c_str());
         }
 
         m_activeScene = std::move(newScene);
         m_activeScene->start();
-        Logger::Log("[INFO] Scene Manager: carregado cena \"{}\"", m_activeScene->name.c_str());
+        Logger::Info("[SCENE MANAGER] Carregado cena \"{}\"", m_activeScene->name.c_str());
     };
 
     void changeScene(const std::string &name)
@@ -43,7 +43,7 @@ public:
         if (m_sceneRegistry.find(name) != m_sceneRegistry.end())
             changeScene(m_sceneRegistry[name]());
         else
-            Logger::Log("[ERROR] SceneManager: Erro ao carregar cena \"{}\": cena não encontrada no registro de cenas.", name.c_str());
+            Logger::Error("[SCENE MANAGER] Erro ao carregar cena \"{}\": cena não encontrada no registro de cenas.", name.c_str());
     }
 
     void update(float deltaTime)
