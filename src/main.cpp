@@ -11,7 +11,7 @@ public:
 
     void start() override
     {
-        backgroundColor = {155, 155, 155};
+        backgroundColor = BLUE;
     }
 
     void stop() override
@@ -36,7 +36,7 @@ public:
 
     void start() override
     {
-        backgroundColor = BLACK;
+        backgroundColor = YELLOW;
     }
 
     void stop() override

@@ -15,8 +15,12 @@
 class Editor
 {
 public:
-    Editor(SceneManager &sceneManager) : sceneManger(sceneManager) {};
+#ifndef DEBUG
+    Editor(SceneManager& sceneManager) { };
+
+#endif
 #ifdef DEBUG
+    Editor(SceneManager& sceneManager) : sceneManger(sceneManager) {};
     void draw()
     {
         sceneWindow();
@@ -93,15 +97,15 @@ private:
         {
             refresh_time = ImGui::GetTime();
         }
-        
+
         while (refresh_time < ImGui::GetTime())
         {
             values[values_offset] = GetFrameTime();
             values_offset = (values_offset + 1) % IM_COUNTOF(values);
             refresh_time += 1.0f / 60.0f;
-            
-            auto actualMax = (*std::max_element(values, values+values_offset));
-            if(max < actualMax)
+
+            auto actualMax = (*std::max_element(values, values + values_offset));
+            if (max < actualMax)
             {
                 max = actualMax;
             }
