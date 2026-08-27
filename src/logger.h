@@ -3,6 +3,10 @@
 #include <deque>
 #include <imgui.h>
 
+#ifndef _WIN32
+#define printf_s printf
+#endif
+
 class Logger
 {
 public:
@@ -15,6 +19,7 @@ public:
     {
         std::string message = std::format(fmt, std::forward<Args>(args)...);
         logs.push_back(message);
+        printf_s("%s\n", message.c_str());
 
         if (logs.size() > maxlogs)
             logs.pop_front();
@@ -43,7 +48,6 @@ public:
         if (autoscrool && ImGui::GetScrollY() >= ImGui::GetScrollMaxY())        
             ImGui::SetScrollHereY(1.0f);
         
-
         ImGui::EndChild();
         ImGui::End();
     };

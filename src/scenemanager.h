@@ -1,9 +1,10 @@
 #pragma once
 
 #include <memory>
-#include "scene.h"
-#include <unordered_map>
 #include <functional>
+#include <unordered_map>
+
+#include "scene.h"
 #include "logger.h"
 
 class SceneManager
@@ -42,7 +43,7 @@ public:
         if (m_sceneRegistry.find(name) != m_sceneRegistry.end())
             changeScene(m_sceneRegistry[name]());
         else
-            printf_s("[SCENEMANAGER] Erro ao carregar cena \"%s\": cena não encontrada no registro de cenas.\n");
+            Logger::Log("[ERROR] SceneManager: Erro ao carregar cena \"{}\": cena não encontrada no registro de cenas.", name.c_str());
     }
 
     void update(float deltaTime)

@@ -46,8 +46,8 @@ void App::loop()
                             gameViewTexture = LoadRenderTexture((int)viewSize.x, (int)viewSize.y);
                         }
                         rlImGuiImageRenderTexture(&gameViewTexture);
-                    ImGui::End();
                 }
+                ImGui::End();
                 
                 m_editor.draw();
 
@@ -80,7 +80,7 @@ void App::setupRaylib(const char *title, int w, int h)
     if(maximized)
         MaximizeWindow();
 
-    SetTargetFPS(60);
+    SetTargetFPS(144);
     SetExitKey(KEY_NULL);
 }
 
