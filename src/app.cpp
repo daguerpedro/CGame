@@ -13,6 +13,9 @@ void App::init(const char *title, int w, int h)
 
 void App::loop()
 {
+    sceneManager.viewWidth = GetRenderWidth();
+    sceneManager.viewHeight = GetRenderHeight();
+
     while (WindowShouldClose() == false)
     {
         float deltaTime = GetFrameTime();
@@ -20,38 +23,40 @@ void App::loop()
 
 #ifndef DEBUG
         BeginDrawing();
-            sceneManager.draw();
+        sceneManager.draw();
         EndDrawing();
 #endif
 
 #ifdef DEBUG
         BeginTextureMode(gameViewTexture);
-            sceneManager.draw();
+        sceneManager.draw();
         EndTextureMode();
 
         BeginDrawing();
-            ClearBackground(BLACK);
-            rlImGuiBegin();
+        ClearBackground(BLACK);
+        rlImGuiBegin();
 
-                ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+        ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
-                ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
-                if(ImGui::Begin("Viewport"))
-                {
-                    ImGui::PopStyleVar();
-                        ImVec2 viewSize = ImGui::GetContentRegionAvail();
-                        if (viewSize.x > 0 && viewSize.y > 0 && (viewSize.x != gameViewTexture.texture.width || viewSize.y != gameViewTexture.texture.height)) 
-                        { 
-                            UnloadRenderTexture(gameViewTexture);
-                            gameViewTexture = LoadRenderTexture((int)viewSize.x, (int)viewSize.y);
-                        }
-                        rlImGuiImageRenderTexture(&gameViewTexture);
-                }
-                ImGui::End();
-                
-                m_editor.draw();
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
+        if (ImGui::Begin("Viewport"))
+        {
+            ImGui::PopStyleVar();
+            ImVec2 viewSize = ImGui::GetContentRegionAvail();
+            if (viewSize.x > 0 && viewSize.y > 0 && (viewSize.x != gameViewTexture.texture.width || viewSize.y != gameViewTexture.texture.height))
+            {
+                UnloadRenderTexture(gameViewTexture);
+                gameViewTexture = LoadRenderTexture((int)viewSize.x, (int)viewSize.y);
+                sceneManager.viewWidth = viewSize.x;
+                sceneManager.viewHeight = viewSize.y;
+            }
+            rlImGuiImageRenderTexture(&gameViewTexture);
+        }
+        ImGui::End();
 
-            rlImGuiEnd();
+        m_editor.draw();
+
+        rlImGuiEnd();
         EndDrawing();
 #endif
     }
@@ -67,7 +72,7 @@ void App::setupRaylib(const char *title, int w, int h)
 
 #ifdef DEBUG
     std::ifstream configFile(EDITOR_CFG);
-    if (configFile.is_open()) 
+    if (configFile.is_open())
     {
         configFile >> width >> height >> maximized;
         configFile.close();
@@ -77,7 +82,7 @@ void App::setupRaylib(const char *title, int w, int h)
 
     InitWindow(width, height, title);
 
-    if(maximized)
+    if (maximized)
         MaximizeWindow();
 
     SetTargetFPS(144);
@@ -99,9 +104,10 @@ void App::cleanUp()
 #ifdef DEBUG
     UnloadRenderTexture(gameViewTexture);
     rlImGuiShutdown();
-    
+
     std::ofstream configFile(EDITOR_CFG);
-    if (configFile.is_open()) {
+    if (configFile.is_open())
+    {
         configFile << GetScreenWidth() << " " << GetScreenHeight() << " " << IsWindowMaximized();
         configFile.close();
     }

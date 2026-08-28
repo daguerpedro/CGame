@@ -1,5 +1,6 @@
 #pragma once
 #include <raylib.h>
+#include <entt/entt.hpp>
 
 class SceneManager;
 
@@ -17,5 +18,6 @@ public:
     virtual void update(SceneManager &sm, float deltaTime) = 0;
     virtual void draw() = 0;
 
+    entt::registry sceneRegistry;
     Color backgroundColor = BLUE;
 };

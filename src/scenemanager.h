@@ -41,4 +41,8 @@ public:
     };
 
     const auto &getRegisteredScenes() const { return m_sceneRegistry; }
+    const auto activeScene() { return m_activeScene.get(); }
+
+    float viewWidth;
+    float viewHeight;
 };

@@ -1,18 +1,20 @@
 #include "editor.h"
+#include "entity.h"
 
 #ifdef DEBUG
 void Editor::draw()
 {
-    sceneWindow();
+    inspectorWindow();
     statsWindow();
 
     Logger::Draw();
 }
 
-void Editor::sceneWindow()
+void Editor::inspectorWindow()
 {
     if (ImGui::Begin("Inspetor"))
     {
+        entityList();
         activeScene();
         sceneList();
         changeScene();
@@ -97,4 +99,79 @@ void Editor::statsWindow()
     }
     ImGui::End();
 }
+
+void Editor::entityList()
+{
+    ImGui::Spacing();
+
+    if (sceneManger.hasActiveScene())
+    {
+        auto &reg = sceneManger.activeScene()->sceneRegistry;
+
+        ImGui::Text("Entidades:");
+        ImGui::Separator();
+
+        for (auto entity : reg.storage<entt::entity>())
+        {
+            uint32_t entityID = static_cast<uint32_t>(entity);
+
+            if (ImGui::TreeNode((void *)(intptr_t)entity, "Entidade #%01d", entityID))
+            {
+                if (auto *pos = reg.try_get<Position>(entity))
+                {
+                    if (ImGui::TreeNode("Position"))
+                    {
+                        ImGui::DragFloat("X", &pos->x, 1.0f);
+                        ImGui::DragFloat("Y", &pos->y, 1.0f);
+                        ImGui::TreePop();
+                    }
+                }
+
+                if (auto *vel = reg.try_get<Velocity>(entity))
+                {
+                    if (ImGui::TreeNode("Velocity"))
+                    {
+                        ImGui::DragFloat("vX", &vel->x, 1.0f);
+                        ImGui::DragFloat("vY", &vel->y, 1.0f);
+                        ImGui::TreePop();
+                    }
+                }
+
+                if (auto *ren = reg.try_get<Renderable>(entity))
+                {
+                    if (ImGui::TreeNode("Renderable"))
+                    {
+                        ImGui::Text("Size");
+                        ImGui::DragFloat2("##Size", &ren->size.x, 1.0f);
+                        ImGui::Text("Rotation");
+                        ImGui::DragFloat("##Rotation", &ren->rotation);
+                        ImGui::Text("Scale");
+                        ImGui::DragFloat("##Scale", &ren->scale);
+
+                        float col[4] = {
+                            ren->color.r / 255.f, 
+                            ren->color.g / 255.f, 
+                            ren->color.b / 255.f, 
+                            ren->color.a / 255.f
+                        };
+
+                        ImGui::Text("Color");
+                        ImGui::ColorEdit4("##Color", col);
+                        ren->color = {
+                            (unsigned char)(col[0] * 255), 
+                            (unsigned char)(col[1] * 255), 
+                            (unsigned char)(col[2] * 255), 
+                            (unsigned char)(col[3] * 255)
+                        };
+                        ImGui::TreePop();
+                    }
+                }
+
+                // Fecha o nó desta entidade
+                ImGui::TreePop();
+            }
+        }
+    }
+}
+
 #endif

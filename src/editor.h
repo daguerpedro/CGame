@@ -27,11 +27,11 @@ private:
     SceneManager &sceneManger;
     std::string m_selectedSceneName;
 
-    void sceneWindow();
+    void inspectorWindow();
 
     void activeScene();
     void sceneList();
-
+    void entityList();
     void changeScene();
 
     float values[60] = {0};
