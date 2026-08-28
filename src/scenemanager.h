@@ -25,46 +25,15 @@ public:
         };
     }
 
-    void changeScene(std::unique_ptr<Scene> newScene)
-    {
-        if (m_activeScene)
-        {
-            m_activeScene->stop();
-            Logger::Info("[SCENE MANAGER] Parado cena \"{}\"", m_activeScene->name.c_str());
-        }
+    void changeScene(std::unique_ptr<Scene> newScene);
 
-        m_activeScene = std::move(newScene);
-        m_activeScene->start();
-        Logger::Info("[SCENE MANAGER] Carregado cena \"{}\"", m_activeScene->name.c_str());
-    };
+    void changeScene(const std::string &name);
 
-    void changeScene(const std::string &name)
-    {
-        if (m_sceneRegistry.find(name) != m_sceneRegistry.end())
-            changeScene(m_sceneRegistry[name]());
-        else
-            Logger::Error("[SCENE MANAGER] Erro ao carregar cena \"{}\": cena não encontrada no registro de cenas.", name.c_str());
-    }
+    void update(float deltaTime);
 
-    void update(float deltaTime)
-    {
-        if (m_activeScene)
-            m_activeScene->update(*this, deltaTime);
-    };
+    void draw();
 
-    void draw()
-    {
-        if (m_activeScene)
-        {
-            ClearBackground(m_activeScene->backgroundColor);
-            m_activeScene->draw();
-        }
-    };
-
-    bool hasActiveScene()
-    {
-        return m_activeScene != nullptr;
-    };
+    bool hasActiveScene();
 
     const std::string &getActiveSceneName()
     {

@@ -54,10 +54,12 @@ target_link_libraries(rlImGui PUBLIC raylib)
 
 add_executable(${PROJECT_NAME} src/main.cpp
   src/app.h
+  src/app.cpp
   src/scene.h
   src/scenemanager.h
+  src/scenemanager.cpp
   src/editor.h
-  src/app.cpp
+  src/editor.cpp
   src/logger.h)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib rlImGui EnTT::EnTT)
