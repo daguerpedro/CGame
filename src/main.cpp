@@ -1,11 +1,10 @@
 #include <iostream>
 #include "app.h"
 #include "logger.h"
-#include "entity.h"
+#include "components.h"
 #include <entt/entt.hpp>
 
-// TODO: https://github.com/skypjack/entt/wiki/Entity-Component-System#they-call-me-reactive-storage
-// Utilizar para otimizar atualizações apenas em entidades que receberam atualizações
+using namespace Engine;
 
 class Menu : public Scene
 {
@@ -23,6 +22,12 @@ public:
         sceneRegistry.emplace<Renderable>(entity, Vector2{15, 15}, 0, 1, GREEN);
         sceneRegistry.emplace<Position>(entity, Position{15, 15});
         sceneRegistry.emplace<Velocity>(entity, Velocity{250, -150});
+
+        auto entity2 = sceneRegistry.create();
+
+        sceneRegistry.emplace<Renderable>(entity2, Vector2{15, 15}, 0, 1, RED);
+        sceneRegistry.emplace<Position>(entity2, Position{500, 405});
+        sceneRegistry.emplace<Velocity>(entity2, Velocity{-250, 150});
     }
 
     void stop() override
@@ -70,10 +75,9 @@ public:
                 pos.x,
                 pos.y,
                 w,
-                h
-            };
+                h};
 
-            DrawRectanglePro(rec, {w/2.f, h/2.f}, ren.rotation, ren.color);
+            DrawRectanglePro(rec, {w / 2.f, h / 2.f}, ren.rotation, ren.color);
         }
     }
 };

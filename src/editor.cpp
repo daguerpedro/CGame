@@ -1,7 +1,38 @@
 #include "editor.h"
-#include "entity.h"
+#include "components.h"
 
 #ifdef DEBUG
+
+namespace Engine
+{
+    static ImVec4 ColorToImGui(Color &col)
+    {
+        return ImVec4{
+            col.r / 255.0f,
+            col.g / 255.0f,
+            col.b / 255.0f,
+            col.a / 255.0f};
+    }
+
+    static Color ColorToRay(ImVec4 &col)
+    {
+        return Color{
+            static_cast<unsigned char>(col.x * 255.f),
+            static_cast<unsigned char>(col.y * 255.f),
+            static_cast<unsigned char>(col.z * 255.f),
+            static_cast<unsigned char>(col.w * 255.f),
+
+        };
+    }
+
+    static void ColorEdit(Color &col, const char *label)
+    {
+        auto fcol = ColorToImGui(col);
+        ImGui::ColorEdit4(label, &fcol.x);
+        col = ColorToRay(fcol);
+    }
+
+
 void Editor::draw()
 {
     inspectorWindow();
@@ -25,7 +56,11 @@ void Editor::inspectorWindow()
 void Editor::activeScene()
 {
     if (sceneManger.hasActiveScene())
+    {
         ImGui::Text("Scene: %s", sceneManger.getActiveSceneName().c_str());
+        auto &col = sceneManger.activeScene()->backgroundColor;
+        ColorEdit(col, "##backcol");
+    }
     else
         ImGui::TextColored({1, 0, 0, 1}, "No scene loaded.");
 
@@ -40,6 +75,9 @@ void Editor::sceneList()
     {
         for (const auto &[sceneName, constructor] : sceneManger.getRegisteredScenes())
         {
+            if(m_selectedSceneName.empty())
+                m_selectedSceneName = sceneName;
+                
             bool is_selected = (m_selectedSceneName == sceneName);
             if (ImGui::Selectable(sceneName.c_str(), is_selected))
                 m_selectedSceneName = sceneName;
@@ -148,21 +186,8 @@ void Editor::entityList()
                         ImGui::Text("Scale");
                         ImGui::DragFloat("##Scale", &ren->scale);
 
-                        float col[4] = {
-                            ren->color.r / 255.f, 
-                            ren->color.g / 255.f, 
-                            ren->color.b / 255.f, 
-                            ren->color.a / 255.f
-                        };
-
                         ImGui::Text("Color");
-                        ImGui::ColorEdit4("##Color", col);
-                        ren->color = {
-                            (unsigned char)(col[0] * 255), 
-                            (unsigned char)(col[1] * 255), 
-                            (unsigned char)(col[2] * 255), 
-                            (unsigned char)(col[3] * 255)
-                        };
+                        ColorEdit(ren->color, "##Col");
                         ImGui::TreePop();
                     }
                 }
@@ -174,4 +199,5 @@ void Editor::entityList()
     }
 }
 
+};
 #endif

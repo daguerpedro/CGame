@@ -7,42 +7,55 @@
 #include "scene.h"
 #include "logger.h"
 
-class SceneManager
+namespace Engine
 {
-private:
-    std::unique_ptr<Scene> m_activeScene;
-    std::unordered_map<std::string, std::function<std::unique_ptr<Scene>()>> m_sceneRegistry;
-
-public:
-    SceneManager() {};
-
-    template <typename T>
-    void registerScene(const std::string &name)
+    class SceneManager
     {
-        m_sceneRegistry[name] = []()
+
+    private:
+        std::unique_ptr<Scene> m_activeScene;
+
+        std::unordered_map<std::string, std::function<std::unique_ptr<Scene>()>> m_sceneRegistry;
+
+    public:
+        SceneManager() {};
+
+        template <typename T>
+
+        void registerScene(const std::string &name)
+
         {
-            return std::make_unique<T>();
+
+            m_sceneRegistry[name] = []()
+
+            {
+                return std::make_unique<T>();
+            };
+        }
+
+        void changeScene(std::unique_ptr<Scene> newScene);
+
+        void changeScene(const std::string &name);
+
+        void update(float deltaTime);
+
+        void draw();
+
+        bool hasActiveScene();
+
+        const std::string &getActiveSceneName()
+
+        {
+
+            return m_activeScene->name;
         };
-    }
 
-    void changeScene(std::unique_ptr<Scene> newScene);
+        const auto &getRegisteredScenes() const { return m_sceneRegistry; }
 
-    void changeScene(const std::string &name);
+        const auto activeScene() { return m_activeScene.get(); }
 
-    void update(float deltaTime);
+        float viewWidth;
 
-    void draw();
-
-    bool hasActiveScene();
-
-    const std::string &getActiveSceneName()
-    {
-        return m_activeScene->name;
+        float viewHeight;
     };
-
-    const auto &getRegisteredScenes() const { return m_sceneRegistry; }
-    const auto activeScene() { return m_activeScene.get(); }
-
-    float viewWidth;
-    float viewHeight;
-};
+}

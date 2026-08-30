@@ -4,21 +4,29 @@
 #include "scene.h"
 #include "scenemanager.h"
 
-class App
+namespace Engine
 {
-protected:
-private:
-    Editor m_editor;
-    RenderTexture2D gameViewTexture;
+    class App
+    {
+    protected:
+    private:
+        Editor m_editor;
 
-    void setupRaylib(const char *title, int w, int h);
-    void setupImGui(int w, int h);
-    void cleanUp();
+        RenderTexture2D gameViewTexture;
 
-public:
-    App() : m_editor(sceneManager) {};
-    SceneManager sceneManager;
+        void setupRaylib(const char *title, int w, int h);
 
-    void init(const char *title, int w, int h);
-    void loop();
+        void setupImGui(int w, int h);
+
+        void cleanUp();
+
+    public:
+        App() : m_editor(sceneManager) {};
+
+        SceneManager sceneManager;
+
+        void init(const char *title, int w, int h);
+
+        void loop();
+    };
 };

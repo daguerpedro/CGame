@@ -12,34 +12,38 @@
 #include <raylib.h>
 #include <cmath>
 
-class Editor
+namespace Engine
 {
-public:
+
+    class Editor
+    {
+    public:
 #ifndef DEBUG
-    Editor(SceneManager& sceneManager) { };
+        Editor(SceneManager &sceneManager) {};
 
 #endif
 #ifdef DEBUG
-    Editor(SceneManager& sceneManager) : sceneManger(sceneManager) {};
-    void draw();
+        Editor(SceneManager &sceneManager) : sceneManger(sceneManager) {};
+        void draw();
 
-private:
-    SceneManager &sceneManger;
-    std::string m_selectedSceneName;
+    private:
+        SceneManager &sceneManger;
+        std::string m_selectedSceneName;
 
-    void inspectorWindow();
+        void inspectorWindow();
 
-    void activeScene();
-    void sceneList();
-    void entityList();
-    void changeScene();
+        void activeScene();
+        void sceneList();
+        void entityList();
+        void changeScene();
 
-    float values[60] = {0};
-    int values_offset = 0;
-    double refresh_time = 0.0;
+        float values[60] = {0};
+        int values_offset = 0;
+        double refresh_time = 0.0;
 
-    float max = 0.000000f;
+        float max = 0.000000f;
 
-    void statsWindow();
+        void statsWindow();
 #endif
+    };
 };
