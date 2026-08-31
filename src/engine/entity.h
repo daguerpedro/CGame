@@ -5,16 +5,15 @@
 
 namespace Engine
 {
-    class Scene;
     class Entity
     {
     public:
-        Entity(entt::entity handle, Scene *scene) : m_entity(handle), m_scene(scene) {};
+        Entity(entt::entity handle, entt::registry *registry) : m_entity(handle), m_registry(registry) {};
 
         template <typename T>
         bool hasComponent()
         {
-            return m_scene->registry.any_of<T>(m_entity);
+            return m_registry->any_of<T>(m_entity);
         };
 
         template <typename T, typename... Args>
@@ -22,7 +21,7 @@ namespace Engine
         {
             ASSERT(!hasComponent<T>(), "Entity already has component!");
 
-            return m_scene->registry.emplace<T>(m_entity, std::forward<Args>(args)...);
+            return m_registry->emplace<T>(m_entity, std::forward<Args>(args)...);
         }
 
         template <typename T>
@@ -30,19 +29,19 @@ namespace Engine
         {
             ASSERT(hasComponent<T>(), "Entity does not have component!");
 
-            return m_scene->registry.get<T>(m_entity);
+            return m_registry->get<T>(m_entity);
         }
 
         template <typename T>
-        T &removeComponent()
+        void removeComponent()
         {
             ASSERT(hasComponent<T>(), "Entity does not have component!");
 
-            return m_scene->registry.erase<T>(m_entity);
+            m_registry->erase<T>(m_entity);
         }
 
     private:
         entt::entity m_entity;
-        Scene *m_scene;
+        entt::registry *m_registry;
     };
 };

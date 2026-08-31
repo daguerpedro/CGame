@@ -1,8 +1,5 @@
 #include <iostream>
-#include "app.h"
-#include "logger.h"
-#include "components.h"
-#include "entity.h"
+#include "engine/app.h"
 
 using namespace Engine;
 

@@ -1,4 +1,5 @@
 #pragma once
+
 #include <raylib.h>
 #include <entt/entt.hpp>
 #include "entity.h"
@@ -6,7 +7,7 @@
 namespace Engine
 {
     class SceneManager;
-
+    
     class Scene
     {
     public:
@@ -31,7 +32,7 @@ namespace Engine
     protected:
         Entity createEntity()
         {
-            Entity e = {registry.create(), this};
+            auto e = Entity(registry.create(), &registry);
             e.addComponent<Transform>();
             return e;
         };
