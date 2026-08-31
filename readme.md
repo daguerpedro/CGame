@@ -4,6 +4,10 @@ Repositório para um jogo simples feito em C++ para Linux & Windows.
   - [1.1. Objetivos](#11-objetivos)
   - [1.2. Ferramentas](#12-ferramentas)
   - [1.3. Bibliotecas](#13-bibliotecas)
+  - [1.4 Referências \& Outros](#14-referências--outros)
+- [Marco](#marco)
+    - [RELEASE:](#release)
+    - [DEBUG:](#debug)
   
 ## 1.1. Objetivos
 - Praticar e desenvolver habilidades em C++.
@@ -44,3 +48,12 @@ Repositório para um jogo simples feito em C++ para Linux & Windows.
   - Seu canal do [YouTube](https://www.youtube.com/@TheCherno) é referência para aprender C++ do básico ao avançado.
 
   - Criador da [Hazel Engine](https://hazelengine.com/), uma engine de código aberto desenvolvido do zero em suas transmissões e vídeos para ensinar arquitetura de engines.
+
+# Marco
+### RELEASE:
+- 50k atualizações 130fps.  
+![ReleaseVer](release.png)    
+
+### DEBUG: 
+- 5k Atualizações 80fps.  
+![DebugVer](debug.png)
