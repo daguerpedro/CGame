@@ -140,11 +140,12 @@ void Editor::statsWindow()
 
 void Editor::entityList()
 {
+    /*
     ImGui::Spacing();
 
     if (sceneManger.hasActiveScene())
     {
-        auto &reg = sceneManger.activeScene()->sceneRegistry;
+        auto &reg = sceneManger.activeScene()->registry;
 
         ImGui::Text("Entidades:");
         ImGui::Separator();
@@ -196,7 +197,7 @@ void Editor::entityList()
                 ImGui::TreePop();
             }
         }
-    }
+    }*/
 }
 
 };

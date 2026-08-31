@@ -3,9 +3,11 @@
 #include "editor.h"
 #include "scene.h"
 #include "scenemanager.h"
+#include <cassert>
 
 namespace Engine
-{
+{   
+    
     class App
     {
     protected:

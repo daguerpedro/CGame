@@ -2,7 +2,7 @@
 #include "app.h"
 #include "logger.h"
 #include "components.h"
-#include <entt/entt.hpp>
+#include "entity.h"
 
 using namespace Engine;
 
@@ -16,18 +16,6 @@ public:
     void start() override
     {
         backgroundColor = YELLOW;
-
-        auto entity = sceneRegistry.create();
-
-        sceneRegistry.emplace<Renderable>(entity, Vector2{15, 15}, 0, 1, GREEN);
-        sceneRegistry.emplace<Position>(entity, Position{15, 15});
-        sceneRegistry.emplace<Velocity>(entity, Velocity{250, -150});
-
-        auto entity2 = sceneRegistry.create();
-
-        sceneRegistry.emplace<Renderable>(entity2, Vector2{15, 15}, 0, 1, RED);
-        sceneRegistry.emplace<Position>(entity2, Position{500, 405});
-        sceneRegistry.emplace<Velocity>(entity2, Velocity{-250, 150});
     }
 
     void stop() override
@@ -36,7 +24,7 @@ public:
 
     void update(SceneManager &sm, float deltaTime) override
     {
-        auto view = sceneRegistry.view<Position, Velocity, Renderable>();
+        /*auto view = registry.view<Position, Velocity, Renderable>();
 
         for (auto ent : view)
         {
@@ -56,12 +44,12 @@ public:
 
             if (pos.y > sm.viewHeight - ren.size.x)
                 vel.y = -vel.y;
-        }
+        }*/
     }
 
     void draw() override
     {
-        auto view = sceneRegistry.view<Renderable, Position>();
+        /*auto view = registry.view<Renderable, Position>();
 
         for (auto ent : view)
         {
@@ -78,7 +66,7 @@ public:
                 h};
 
             DrawRectanglePro(rec, {w / 2.f, h / 2.f}, ren.rotation, ren.color);
-        }
+        }*/
     }
 };
 
