@@ -25,7 +25,7 @@ namespace Engine
             m_sceneRegistry[name] = []()
             {
                 return std::make_unique<T>();
-            };
+            };           
         }
 
         void changeScene(std::unique_ptr<Scene> newScene);
@@ -35,21 +35,30 @@ namespace Engine
 
         const std::string &getActiveSceneName()
         {
-
             return m_activeScene->name;
         };
 
+        float getViewWidth() const
+        {
+            return viewWidth;
+        }
+
+        float getViewHeight() const
+        {
+            return viewHeight;
+        }
+        
 private:
         friend class App;
         friend class Editor;
+        friend class Renderer;
         
         void update(float deltaTime);
-        void draw();
 
         const auto &getRegisteredScenes() const { return m_sceneRegistry; }
         const auto activeScene() { return m_activeScene.get(); }
 
-        float viewWidth;
-        float viewHeight;
+        float viewWidth = 0;
+        float viewHeight = 0;
     };
 }

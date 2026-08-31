@@ -5,33 +5,33 @@
 
 namespace Engine
 {
-    struct TAG
+    struct TagComponent
     {
         std::string name = "Entity";
     };
 
-    struct BoxCollider
+    struct BoxColliderComponent
     {
-        Vector2 offset = {0};
-        Vector2 size = {0};
+        Vector2 offset = {0, 0};
+        Vector2 size = {0, 0};
     };
 
-    struct Body
+    struct BodyComponent
     {
         float mass = {1};
         float gravity = {0};
-        Vector2 velocity = {0};
+        Vector2 velocity = {0, 0};
         bool isStatic = false;
     };
     
-    struct Sprite
+    struct SpriteComponent
     {
         Texture2D *texture = nullptr;
         Rectangle sourceRect = {0};
         Color color;
     };
 
-    struct SpriteAnimation
+    struct SpriteAnimationComponent
     {
         int fps = 0;
         int curFrame = 0;
@@ -39,10 +39,16 @@ namespace Engine
         float frameTimer;
     };
 
-    struct Transform
+    struct RectangleComponent
     {
-        Vector2 position = {0};
+        Vector2 size = {1, 1};
+        Color color;
+    };
+
+    struct TransformComponent
+    {
+        Vector2 position = {0, 0};
         float rotation = 0;
-        Vector2 scale = {1};
+        Vector2 scale = {1, 1};
     };
 };

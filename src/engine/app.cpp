@@ -13,11 +13,14 @@ namespace Engine
         setupImGui(w, h);
     };
 
-    void App::loop()
+    void App::start()
     {
         sceneManager.viewWidth = GetRenderWidth();
         sceneManager.viewHeight = GetRenderHeight();
 
+        if (onStart)
+            onStart();
+            
         while (WindowShouldClose() == false)
         {
             float deltaTime = GetFrameTime();
@@ -25,13 +28,13 @@ namespace Engine
 
 #ifndef DEBUG
             BeginDrawing();
-            sceneManager.draw();
+            m_renderer.requestDraw(sceneManager);
             EndDrawing();
 #endif
 
 #ifdef DEBUG
             BeginTextureMode(gameViewTexture);
-            sceneManager.draw();
+            m_renderer.requestDraw(sceneManager);
             EndTextureMode();
 
             BeginDrawing();

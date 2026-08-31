@@ -16,39 +16,9 @@ namespace Engine
         inline static std::deque<std::string> buffer;
         inline static bool autoscrool = true;
 
-    public:
-        template <typename... Args>
-        inline static void Log(std::format_string<Args...> fmt, Args &&...args)
-        {
-            std::string message = std::format(fmt, std::forward<Args>(args)...);
-            buffer.push_back(message);
-            printf_s("%s\n", message.c_str());
-
-            if (buffer.size() > maxlogs)
-                buffer.pop_front();
-        };
-
-        template <typename... Args>
-        inline static void Info(std::format_string<Args...> fmt, Args &&...args)
-        {
-            std::string message = std::format(fmt, std::forward<Args>(args)...);
-            Log("[INFO] {}", message);
-        };
-
-        template <typename... Args>
-        inline static void Warning(std::format_string<Args...> fmt, Args &&...args)
-        {
-            std::string message = std::format(fmt, std::forward<Args>(args)...);
-            Log("[WARNING] {}", message);
-        };
-
-        template <typename... Args>
-        inline static void Error(std::format_string<Args...> fmt, Args &&...args)
-        {
-            std::string message = std::format(fmt, std::forward<Args>(args)...);
-            Log("[ERROR] {}", message);
-        };
-
+        friend class Editor;
+        friend class App;
+        
         inline static void Clear()
         {
             buffer.clear();
@@ -99,6 +69,39 @@ namespace Engine
 
             ImGui::EndChild();
             ImGui::End();
+        };
+
+    public:
+        template <typename... Args>
+        inline static void Log(std::format_string<Args...> fmt, Args &&...args)
+        {
+            std::string message = std::format(fmt, std::forward<Args>(args)...);
+            buffer.push_back(message);
+            printf_s("%s\n", message.c_str());
+
+            if (buffer.size() > maxlogs)
+                buffer.pop_front();
+        };
+
+        template <typename... Args>
+        inline static void Info(std::format_string<Args...> fmt, Args &&...args)
+        {
+            std::string message = std::format(fmt, std::forward<Args>(args)...);
+            Log("[INFO] {}", message);
+        };
+
+        template <typename... Args>
+        inline static void Warning(std::format_string<Args...> fmt, Args &&...args)
+        {
+            std::string message = std::format(fmt, std::forward<Args>(args)...);
+            Log("[WARNING] {}", message);
+        };
+
+        template <typename... Args>
+        inline static void Error(std::format_string<Args...> fmt, Args &&...args)
+        {
+            std::string message = std::format(fmt, std::forward<Args>(args)...);
+            Log("[ERROR] {}", message);
         };
     };
 };

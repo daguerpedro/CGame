@@ -21,184 +21,175 @@ namespace Engine
             static_cast<unsigned char>(col.y * 255.f),
             static_cast<unsigned char>(col.z * 255.f),
             static_cast<unsigned char>(col.w * 255.f),
-
         };
     }
 
     static void ColorEdit(Color &col, const char *label)
     {
         auto fcol = ColorToImGui(col);
-        ImGui::ColorEdit4(label, &fcol.x);
-        col = ColorToRay(fcol);
+        if (ImGui::ColorEdit4(label, &fcol.x))
+            col = ColorToRay(fcol);
     }
 
-
-void Editor::draw()
-{
-    inspectorWindow();
-    statsWindow();
-
-    Logger::Draw();
-}
-
-void Editor::inspectorWindow()
-{
-    if (ImGui::Begin("Inspetor"))
+    void Editor::draw()
     {
-        entityList();
-        activeScene();
-        sceneList();
-        changeScene();
+        inspectorWindow();
+        statsWindow();
+
+        Logger::Draw();
     }
-    ImGui::End();
-};
 
-void Editor::activeScene()
-{
-    if (sceneManger.hasActiveScene())
+    void Editor::inspectorWindow()
     {
-        ImGui::Text("Scene: %s", sceneManger.getActiveSceneName().c_str());
-        auto &col = sceneManger.activeScene()->backgroundColor;
-        ColorEdit(col, "##backcol");
-    }
-    else
-        ImGui::TextColored({1, 0, 0, 1}, "No scene loaded.");
-
-    ImGui::Separator();
-};
-
-void Editor::sceneList()
-{
-    ImGui::Spacing();
-    ImGui::SetNextItemWidth(-1);
-    if (ImGui::BeginListBox("##Scene Registry"))
-    {
-        for (const auto &[sceneName, constructor] : sceneManger.getRegisteredScenes())
+        if (ImGui::Begin("Inspetor"))
         {
-            if(m_selectedSceneName.empty())
-                m_selectedSceneName = sceneName;
-                
-            bool is_selected = (m_selectedSceneName == sceneName);
-            if (ImGui::Selectable(sceneName.c_str(), is_selected))
-                m_selectedSceneName = sceneName;
-
-            if (is_selected)
-                ImGui::SetItemDefaultFocus();
+            entityList();
+            activeScene();
+            sceneList();
+            changeScene();
         }
-        ImGui::EndListBox();
-    }
-};
+        ImGui::End();
+    };
 
-void Editor::changeScene()
-{
-    ImGui::BeginDisabled(m_selectedSceneName.empty());
-    if (ImGui::Button("Trocar Cena"))
+    void Editor::activeScene()
     {
-        if (!m_selectedSceneName.empty())
-            sceneManger.changeScene(m_selectedSceneName);
-    }
-    ImGui::EndDisabled();
-};
-
-void Editor::statsWindow()
-{
-    // Code by ImGuiDemoTools :D
-    if (refresh_time == 0.0)
-    {
-        refresh_time = ImGui::GetTime();
-    }
-
-    while (refresh_time < ImGui::GetTime())
-    {
-        values[values_offset] = GetFrameTime();
-        values_offset = (values_offset + 1) % IM_COUNTOF(values);
-        refresh_time += 1.0f / 60.0f;
-
-        auto actualMax = (*std::max_element(values, values + values_offset));
-        if (max < actualMax)
+        if (sceneManager.hasActiveScene())
         {
-            max = actualMax;
+            ImGui::Text("Scene: %s", sceneManager.getActiveSceneName().c_str());
+            auto &col = sceneManager.activeScene()->backgroundColor;
+            ColorEdit(col, "##backcol");
         }
-    }
+        else
+            ImGui::TextColored({1, 0, 0, 1}, "No scene loaded.");
 
-    if (ImGui::Begin("Stats"))
-    {
-        float average = 0.0f;
-        for (int n = 0; n < IM_COUNTOF(values); n++)
-            average += values[n];
-        average /= (float)IM_COUNTOF(values);
-        char overlay[32];
-
-        ImGui::Text("FPS: %1.f (%1.f)", 1.0 / GetFrameTime(), 1.0 / average);
-        ImGui::Text("Frame Time: %.4f (ms)", average * 1000);
-
-        ImGui::SetNextItemWidth(-1);
-        ImGui::PlotLines("##ftime", values, IM_COUNTOF(values), values_offset, NULL, 0, max, ImVec2(0, 80.0f));
-    }
-    ImGui::End();
-}
-
-void Editor::entityList()
-{
-    /*
-    ImGui::Spacing();
-
-    if (sceneManger.hasActiveScene())
-    {
-        auto &reg = sceneManger.activeScene()->registry;
-
-        ImGui::Text("Entidades:");
         ImGui::Separator();
+    };
 
-        for (auto entity : reg.storage<entt::entity>())
+    void Editor::sceneList()
+    {
+        ImGui::Spacing();
+        ImGui::SetNextItemWidth(-1);
+        if (ImGui::BeginListBox("##Scene Registry"))
         {
-            uint32_t entityID = static_cast<uint32_t>(entity);
-
-            if (ImGui::TreeNode((void *)(intptr_t)entity, "Entidade #%01d", entityID))
+            for (const auto &[sceneName, constructor] : sceneManager.getRegisteredScenes())
             {
-                if (auto *pos = reg.try_get<Position>(entity))
-                {
-                    if (ImGui::TreeNode("Position"))
-                    {
-                        ImGui::DragFloat("X", &pos->x, 1.0f);
-                        ImGui::DragFloat("Y", &pos->y, 1.0f);
-                        ImGui::TreePop();
-                    }
-                }
+                if (m_selectedSceneName.empty())
+                    m_selectedSceneName = sceneName;
 
-                if (auto *vel = reg.try_get<Velocity>(entity))
-                {
-                    if (ImGui::TreeNode("Velocity"))
-                    {
-                        ImGui::DragFloat("vX", &vel->x, 1.0f);
-                        ImGui::DragFloat("vY", &vel->y, 1.0f);
-                        ImGui::TreePop();
-                    }
-                }
+                bool is_selected = (m_selectedSceneName == sceneName);
+                if (ImGui::Selectable(sceneName.c_str(), is_selected))
+                    m_selectedSceneName = sceneName;
 
-                if (auto *ren = reg.try_get<Renderable>(entity))
-                {
-                    if (ImGui::TreeNode("Renderable"))
-                    {
-                        ImGui::Text("Size");
-                        ImGui::DragFloat2("##Size", &ren->size.x, 1.0f);
-                        ImGui::Text("Rotation");
-                        ImGui::DragFloat("##Rotation", &ren->rotation);
-                        ImGui::Text("Scale");
-                        ImGui::DragFloat("##Scale", &ren->scale);
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndListBox();
+        }
+    };
 
-                        ImGui::Text("Color");
-                        ColorEdit(ren->color, "##Col");
-                        ImGui::TreePop();
-                    }
-                }
+    void Editor::changeScene()
+    {
+        ImGui::BeginDisabled(m_selectedSceneName.empty());
+        if (ImGui::Button("Trocar Cena"))
+        {
+            if (!m_selectedSceneName.empty())
+                sceneManager.changeScene(m_selectedSceneName);
+        }
+        ImGui::EndDisabled();
+    };
 
-                // Fecha o nó desta entidade
-                ImGui::TreePop();
+    void Editor::statsWindow()
+    {
+        // Code by ImGuiDemoTools :D
+        if (refresh_time == 0.0)
+        {
+            refresh_time = ImGui::GetTime();
+        }
+
+        while (refresh_time < ImGui::GetTime())
+        {
+            values[values_offset] = GetFrameTime();
+            values_offset = (values_offset + 1) % IM_COUNTOF(values);
+            refresh_time += 1.0f / 60.0f;
+
+            auto actualMax = (*std::max_element(values, values + values_offset));
+            if (max < actualMax)
+            {
+                max = actualMax;
             }
         }
-    }*/
-}
+
+        if (ImGui::Begin("Stats"))
+        {
+            float average = 0.0f;
+            for (int n = 0; n < IM_COUNTOF(values); n++)
+                average += values[n];
+            average /= (float)IM_COUNTOF(values);
+            char overlay[32];
+
+            ImGui::Text("FPS: %1.f (%1.f)", 1.0 / GetFrameTime(), 1.0 / average);
+            ImGui::Text("Frame Time: %.4f (ms)", average * 1000);
+
+            ImGui::SetNextItemWidth(-1);
+            ImGui::PlotLines("##ftime", values, IM_COUNTOF(values), values_offset, NULL, 0, max, ImVec2(0, 80.0f));
+        }
+        ImGui::End();
+    }
+
+    void Editor::entityList()
+    {
+        ImGui::Spacing();
+        if (sceneManager.hasActiveScene())
+        {
+            auto &reg = sceneManager.activeScene()->registry;
+            ImGui::Text("Entidades:");
+            ImGui::Separator();
+
+            for (auto entity : reg.storage<entt::entity>())
+            {
+                uint32_t entityID = static_cast<uint32_t>(entity);
+                std::string nodeName = "Entidade " + std::to_string(entityID);
+                if (auto *tag = reg.try_get<TagComponent>(entity))
+                    nodeName = tag->name + " (ID: " + std::to_string(entityID) + ")";
+
+                if (ImGui::TreeNode((void *)(intptr_t)entity, "%s", nodeName.c_str()))
+                {
+                    if (auto *trans = reg.try_get<TransformComponent>(entity))
+                    {
+                        if (ImGui::TreeNode("Transform"))
+                        {
+                            ImGui::DragFloat2("Position", &trans->position.x, 1.0f);
+                            ImGui::DragFloat2("Scale", &trans->scale.x);
+                            ImGui::DragFloat("Rotation", &trans->rotation, 1.0f, 0.0f, 360.0f);
+
+                            ImGui::TreePop();
+                        }
+                    }
+
+                    if (auto *rec = reg.try_get<RectangleComponent>(entity))
+                    {
+                        if (ImGui::TreeNode("Rectangle"))
+                        {
+                            ImGui::DragFloat2("Size", &rec->size.x, 1.0f);
+                            ColorEdit(rec->color, "Color");
+                            ImGui::TreePop();
+                        }
+                    }
+
+                    if (auto *body = reg.try_get<BodyComponent>(entity))
+                    {
+                        if (ImGui::TreeNode("Body"))
+                        {
+                            ImGui::DragFloat2("Velocity", &body->velocity.x, 1.0f);
+                            ImGui::TreePop();
+                        }
+                    }
+
+                    ImGui::TreePop();
+                }
+            }
+        }
+    }
 
 };
 #endif

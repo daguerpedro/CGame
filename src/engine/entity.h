@@ -1,13 +1,14 @@
 #pragma once
 
 #include <entt/entt.hpp>
-#include  "defs.h"
+#include "defs.h"
 
 namespace Engine
 {
     class Entity
     {
     public:
+        Entity() : m_entity(entt::null), m_registry(nullptr) {}
         Entity(entt::entity handle, entt::registry *registry) : m_entity(handle), m_registry(registry) {};
 
         template <typename T>

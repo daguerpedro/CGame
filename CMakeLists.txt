@@ -64,8 +64,12 @@ add_executable(${PROJECT_NAME} src/main.cpp
   src/engine/components.h
   src/engine/entity.h
   src/engine/defs.h
-  )
+  src/game/scenes/menu.h
+  src/engine/engine.h
+  src/engine/renderer.h
+)
 
+target_include_directories(${PROJECT_NAME} PUBLIC src/engine)
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib rlImGui EnTT::EnTT)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE

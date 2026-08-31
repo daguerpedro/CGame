@@ -23,11 +23,11 @@ namespace Engine
 
 #endif
 #ifdef DEBUG
-        Editor(SceneManager &sceneManager) : sceneManger(sceneManager) {};
+        Editor(SceneManager &sceneManager) : sceneManager(sceneManager) {};
         void draw();
 
     private:
-        SceneManager &sceneManger;
+        SceneManager &sceneManager;
         std::string m_selectedSceneName;
 
         void inspectorWindow();

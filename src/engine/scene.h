@@ -3,6 +3,7 @@
 #include <raylib.h>
 #include <entt/entt.hpp>
 #include "entity.h"
+#include "components.h"
 
 namespace Engine
 {
@@ -12,30 +13,37 @@ namespace Engine
     {
     public:
         const std::string name;
-        Scene(const std::string sceneName) : name(sceneName) {};
+        Scene(const std::string sceneName) : name(sceneName), sceneManager(nullptr) {};
 
         virtual ~Scene() = default;
 
         virtual void start() = 0;
         virtual void stop() = 0;
 
-        virtual void update(SceneManager &sm, float deltaTime) = 0;
-        virtual void draw() = 0;
+        virtual void update(float deltaTime) = 0;
+        entt::registry registry;
 
     private:
         friend class Entity;
+        friend class Renderer;
         friend class SceneManager;
         friend class Editor;
 
-        entt::registry registry;
+
+        void bindSceneManager(SceneManager &sm)
+        {
+            sceneManager = &sm;
+        }
 
     protected:
         Entity createEntity()
         {
             auto e = Entity(registry.create(), &registry);
-            e.addComponent<Transform>();
+            e.addComponent<TransformComponent>();
             return e;
         };
-        Color backgroundColor = BLUE;
+
+        SceneManager* sceneManager;
+        Color backgroundColor = BLACK;
     };
 };
