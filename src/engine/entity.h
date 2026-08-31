@@ -38,7 +38,7 @@ namespace Engine
         {
             ASSERT(hasComponent<T>(), "Entity does not have component!");
 
-            return m_scene->registry.remove<T>(m_entity);
+            return m_scene->registry.erase<T>(m_entity);
         }
 
     private:

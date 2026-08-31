@@ -53,17 +53,17 @@ target_include_directories(rlImGui PUBLIC
 target_link_libraries(rlImGui PUBLIC raylib)
 
 add_executable(${PROJECT_NAME} src/main.cpp
-  src/app.h
-  src/app.cpp
-  src/scene.h
-  src/scenemanager.h
-  src/scenemanager.cpp
-  src/editor.h
-  src/editor.cpp
-  src/logger.h
-  src/components.h
-  src/entity.h
-  src/defs.h
+  src/engine/app.h
+  src/engine/app.cpp
+  src/engine/scene.h
+  src/engine/scenemanager.h
+  src/engine/scenemanager.cpp
+  src/engine/editor.h
+  src/engine/editor.cpp
+  src/engine/logger.h
+  src/engine/components.h
+  src/engine/entity.h
+  src/engine/defs.h
   )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib rlImGui EnTT::EnTT)

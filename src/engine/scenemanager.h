@@ -11,7 +11,6 @@ namespace Engine
 {
     class SceneManager
     {
-
     private:
         std::unique_ptr<Scene> m_activeScene;
 
@@ -21,41 +20,36 @@ namespace Engine
         SceneManager() {};
 
         template <typename T>
-
         void registerScene(const std::string &name)
-
         {
-
             m_sceneRegistry[name] = []()
-
             {
                 return std::make_unique<T>();
             };
         }
 
         void changeScene(std::unique_ptr<Scene> newScene);
-
         void changeScene(const std::string &name);
-
-        void update(float deltaTime);
-
-        void draw();
 
         bool hasActiveScene();
 
         const std::string &getActiveSceneName()
-
         {
 
             return m_activeScene->name;
         };
 
-        const auto &getRegisteredScenes() const { return m_sceneRegistry; }
+private:
+        friend class App;
+        friend class Editor;
+        
+        void update(float deltaTime);
+        void draw();
 
+        const auto &getRegisteredScenes() const { return m_sceneRegistry; }
         const auto activeScene() { return m_activeScene.get(); }
 
         float viewWidth;
-
         float viewHeight;
     };
 }
